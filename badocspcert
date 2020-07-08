@@ -15,8 +15,16 @@ csplit -s -f "$TMP/_pem" "$TMP/_ossl.txt" '/-----BEGIN CERTIFICATE-----/' '{*}'
 for pem in "$TMP"/_pem*; do
 	hash=$(openssl x509 -in "$pem" -outform der 2>/dev/null | \
 		openssl dgst -sha256 -binary | base64)
-	grep -q "$hash" "$0" && echo "$1 affected"
+	grep -q "$hash" "$0"; then
+                affected=true
+        fi
 done
+
+if $affected; then
+        echo "$1 IS affected";
+else
+        echo "$1 NOT affected";
+fi 
 
 rm -r "$TMP"
 
