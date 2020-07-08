@@ -1,5 +1,7 @@
 #!/bin/bash
 
+affected=false
+
 if [ -z "$1" ]; then
 	echo -e "Usage:"
 	echo -e "\t$0 [host]"
@@ -15,7 +17,7 @@ csplit -s -f "$TMP/_pem" "$TMP/_ossl.txt" '/-----BEGIN CERTIFICATE-----/' '{*}'
 for pem in "$TMP"/_pem*; do
 	hash=$(openssl x509 -in "$pem" -outform der 2>/dev/null | \
 		openssl dgst -sha256 -binary | base64)
-	grep -q "$hash" "$0"; then
+	if grep -q "$hash" "$0"; then
                 affected=true
         fi
 done
